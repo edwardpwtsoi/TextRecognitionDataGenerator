@@ -43,6 +43,7 @@ class FakeTextDataGenerator(object):
         text_color,
         orientation,
         space_width,
+        space_delimiter,
         character_spacing,
         margins,
         fit,
@@ -226,7 +227,7 @@ class FakeTextDataGenerator(object):
         #####################################
         # We remove spaces if space_width == 0
         if space_width == 0:
-            text = text.replace(" ", "")
+            text = text.replace(space_delimiter, "")
         if name_format == 0:
             image_name = "{}_{}.{}".format(text, str(index), extension)
             mask_name = "{}_{}_mask.png".format(text, str(index))

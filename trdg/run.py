@@ -251,6 +251,22 @@ def parse_arguments():
         default=1.0,
     )
     parser.add_argument(
+        "-sp",
+        "--space_probability",
+        type=float,
+        nargs="?",
+        help="Define the probability of inserting a spaces between words. 1.0 means always insert space between two characters/words",
+        default=1.0,
+    )
+    parser.add_argument(
+        "-sd",
+        "--space_delimiter",
+        type=int,
+        nargs="?",
+        help="Define the delimiter to be used as the `spaces` between characters/words. default to be whitespace U+0020 i.e. 32",
+        default=32,
+    )
+    parser.add_argument(
         "-cs",
         "--character_spacing",
         type=int,
@@ -402,7 +418,7 @@ def main():
             args.name_format = 2
     else:
         strings = create_strings_from_dict(
-            args.length, args.random, args.count, lang_dict
+            args.length, args.random, args.count, lang_dict, args.language, chr(args.space_delimiter), args.space_probability
         )
 
     if args.language == "ar":
@@ -445,6 +461,7 @@ def main():
                 [args.text_color] * string_count,
                 [args.orientation] * string_count,
                 [args.space_width] * string_count,
+                [chr(args.space_delimiter)] * string_count,
                 [args.character_spacing] * string_count,
                 [args.margins] * string_count,
                 [args.fit] * string_count,
