@@ -9,6 +9,7 @@ def generate(
     text_color,
     font_size,
     orientation,
+    space_delimiter,
     space_width,
     character_spacing,
     fit,
@@ -22,6 +23,7 @@ def generate(
             font,
             text_color,
             font_size,
+            space_delimiter,
             space_width,
             character_spacing,
             fit,
@@ -39,24 +41,24 @@ def generate(
 
 
 def _generate_horizontal_text(
-    text, font, text_color, font_size, space_width, character_spacing, fit, word_split, 
+    text, font, text_color, font_size, space_delimiter, space_width, character_spacing, fit, word_split,
     stroke_width=0, stroke_fill="#282828"
 ):
     image_font = ImageFont.truetype(font=font, size=font_size)
 
-    space_width = int(image_font.getsize(" ")[0] * space_width)
+    space_width = int(image_font.getsize(space_delimiter)[0] * space_width)
 
     if word_split:
         splitted_text = []
-        for w in text.split(" "):
+        for w in text.split(space_delimiter):
             splitted_text.append(w)
-            splitted_text.append(" ")
+            splitted_text.append(space_delimiter)
         splitted_text.pop()
     else:
         splitted_text = text
 
     piece_widths = [
-        image_font.getsize(p)[0] if p != " " else space_width for p in splitted_text
+        image_font.getsize(p)[0] if p != space_delimiter else space_width for p in splitted_text
     ]
     text_width = sum(piece_widths)
     if not word_split:
