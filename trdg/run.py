@@ -442,7 +442,7 @@ def main():
             FakeTextDataGenerator.generate_from_tuple,
             zip(
                 [i for i in range(0, string_count)],
-                strings,
+                [s.replace(args.space_delimiter, " ") for s in strings],
                 [fonts[rnd.randrange(0, len(fonts))] for _ in range(0, string_count)],
                 [args.output_dir] * string_count,
                 [args.format] * string_count,
@@ -460,7 +460,6 @@ def main():
                 [args.alignment] * string_count,
                 [args.text_color] * string_count,
                 [args.orientation] * string_count,
-                [chr(args.space_delimiter)] * string_count,
                 [args.space_width] * string_count,
                 [args.character_spacing] * string_count,
                 [args.margins] * string_count,
