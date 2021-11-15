@@ -259,6 +259,14 @@ def parse_arguments():
         default=1.0,
     )
     parser.add_argument(
+        "-ms",
+        "--max_spaces",
+        type=int,
+        nargs="?",
+        help="Define the maximum numbers of space being inserted. Uniformly draw from [1, N]",
+        default=1,
+    )
+    parser.add_argument(
         "-sd",
         "--space_delimiter",
         type=int,
@@ -417,8 +425,10 @@ def main():
         ):
             args.name_format = 2
     else:
+        # TODO: currently, only this function is supporting the custom changes, might extend it later
         strings = create_strings_from_dict(
-            args.length, args.random, args.count, lang_dict, args.language, chr(args.space_delimiter), args.space_probability
+            args.length, args.random, args.count, lang_dict, args.language, chr(args.space_delimiter),
+            args.space_probability, args.max_spaces
         )
 
     if args.language == "ar":

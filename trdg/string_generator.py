@@ -26,7 +26,7 @@ def create_strings_from_file(filename, count):
     return strings
 
 
-def create_strings_from_dict(length, allow_variable, count, lang_dict, language, delimeter, space_probability):
+def create_strings_from_dict(length, allow_variable, count, lang_dict, language, delimeter, space_probability, max_spaces):
     """
         Create all strings by picking X random word in the dictionnary
     """
@@ -37,10 +37,11 @@ def create_strings_from_dict(length, allow_variable, count, lang_dict, language,
         current_string = ""
         for _ in range(0, rnd.randint(1, length) if allow_variable else length):
             current_string += lang_dict[rnd.randrange(dict_len)]
+            space_multiplier = rnd.randint(1, max_spaces)
             if language != "cn":
-                current_string += delimeter
+                current_string += delimeter * space_multiplier
             else:
-                current_string += delimeter if rnd.uniform(0., 1.) < space_probability else ""
+                current_string += delimeter * space_multiplier if rnd.uniform(0., 1.) < space_probability else ""
         strings.append(current_string.strip(delimeter))
     return strings
 
