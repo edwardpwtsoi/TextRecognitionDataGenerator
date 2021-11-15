@@ -15,6 +15,8 @@ def generate(
     word_split,
     stroke_width=0, 
     stroke_fill="#282828",
+    border=0,
+    border_width=0
 ):
     if orientation == 0:
         return _generate_horizontal_text(
@@ -28,8 +30,11 @@ def generate(
             word_split,
             stroke_width,
             stroke_fill,
+            border,
+            border_width,
         )
     elif orientation == 1:
+        # TODO: Do not support border
         return _generate_vertical_text(
             text, font, text_color, font_size, space_width, character_spacing, fit,
             stroke_width, stroke_fill, 
@@ -40,7 +45,7 @@ def generate(
 
 def _generate_horizontal_text(
     text, font, text_color, font_size, space_width, character_spacing, fit, word_split, 
-    stroke_width=0, stroke_fill="#282828"
+    stroke_width=0, stroke_fill="#282828", border=0, border_width=0
 ):
     image_font = ImageFont.truetype(font=font, size=font_size)
 
@@ -106,6 +111,29 @@ def _generate_horizontal_text(
             stroke_width=stroke_width,
             stroke_fill=stroke_fill,
         )
+    if border > 0:
+        border = rnd.randint(0, 7) if border == 8 else border
+        if border & 4 == 4:
+            if rnd.uniform(0., 1.) > 0.5:
+                txt_img_draw.line(
+                    (0, text_height // 2, text_width, text_height // 2),
+                    fill=fill,
+                    width=border_width,
+                )
+        if border & 2 == 2:
+            if rnd.uniform(0., 1.) > 0.5:
+                txt_img_draw.line(
+                    (0, 0, text_width, 0),
+                    fill=fill,
+                    width=border_width,
+                )
+        if border & 1 == 1:
+            if rnd.uniform(0., 1.) > 0.5:
+                txt_img_draw.line(
+                    (0, text_height, text_width, text_height),
+                    fill=fill,
+                    width=border_width,
+                )
 
     if fit:
         return txt_img.crop(txt_img.getbbox()), txt_mask.crop(txt_img.getbbox())

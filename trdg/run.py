@@ -145,6 +145,25 @@ def parse_arguments():
         default=False,
     )
     parser.add_argument(
+        "-bm",
+        "--border_mode",
+        default=0,
+        help="Which type of borders (top: 1, bottom: 2, strikethrough: 4) to be add. "
+             "0: no border (default), "
+             "1: top only, "
+             "2: bottom only, "
+             "4: strikethrough only, "
+             "[5-7]: bitwise combinations of the above, i.e. 7 mean all three",
+        type=int
+    )
+    parser.add_argument(
+        "-bw",
+        "--border_width",
+        default=0,
+        help="Width of borders. default: 0",
+        type=int
+    )
+    parser.add_argument(
         "-wk",
         "--use_wikipedia",
         action="store_true",
@@ -471,6 +490,7 @@ def main():
                 [args.text_color] * string_count,
                 [args.orientation] * string_count,
                 [args.space_width] * string_count,
+                [args.space_delimiter] * string_count,
                 [args.character_spacing] * string_count,
                 [args.margins] * string_count,
                 [args.fit] * string_count,
@@ -480,6 +500,8 @@ def main():
                 [args.stroke_width] * string_count,
                 [args.stroke_fill] * string_count,
                 [args.image_mode] * string_count,
+                [args.border_mode] * string_count,
+                [args.border_width] * string_count,
             ),
         ),
         total=args.count,
