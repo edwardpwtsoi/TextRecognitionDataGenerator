@@ -342,7 +342,7 @@ def parse_arguments():
         help="Generate upper or lowercase only. arguments: upper or lower. Example: --case upper",
     )
     parser.add_argument(
-        "-dt", "--dict", type=str, nargs="?", help="Define the dictionary to be used"
+        "-dt", "--dict", type=str, nargs="*", help="Define the dictionary to be used"
     )
     parser.add_argument(
         "-ws",
@@ -396,11 +396,13 @@ def main():
     # Creating word list
     if args.dict:
         lang_dict = []
-        if os.path.isfile(args.dict):
-            with open(args.dict, "r", encoding="utf8", errors="ignore") as d:
-                lang_dict = [l for l in d.read() if len(l) > 0]
-        else:
-            sys.exit("Cannot open dict")
+        for d in args.dict:
+            if os.path.isfile(d):
+                with open(d, "r", encoding="utf8", errors="ignore") as d:
+                    lang_dict.extend([l for l in d.read() if len(l) > 0])
+            else:
+                sys.exit("Cannot open dict")
+        lang_dict = sorted(list(set(lang_dict)))
     else:
         lang_dict = load_dict(args.language)
 
