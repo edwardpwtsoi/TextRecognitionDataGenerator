@@ -317,7 +317,7 @@ def parse_arguments():
         default=False,
     )
     parser.add_argument(
-        "-ft", "--font", type=str, nargs="?", help="Define font to be used"
+        "-ft", "--font", type=str, nargs="*", help="Define font to be used"
     )
     parser.add_argument(
         "-fd",
@@ -414,10 +414,9 @@ def main():
             if os.path.splitext(p)[1] == ".ttf"
         ]
     elif args.font:
-        if os.path.isfile(args.font):
-            fonts = [args.font]
-        else:
-            sys.exit("Cannot open font")
+        fonts = [f for f in args.font if os.path.isfile(f)]
+        if len(fonts) != len(args.font):
+            sys.exit(f"Cannot find font(s): {[f for f in args.font if not os.path.isfile(f)]}")
     else:
         fonts = load_fonts(args.language)
 
