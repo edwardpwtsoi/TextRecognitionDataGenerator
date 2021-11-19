@@ -59,7 +59,7 @@ def image(height, width, image_dir):
     """
         Create a background with a image
     """
-    images = os.listdir(image_dir)
+    images = [x for x in os.listdir(image_dir) if os.path.isfile(os.path.join(image_dir, x)) and not x.startswith(".")]
 
     if len(images) > 0:
         pic = Image.open(
