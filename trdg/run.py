@@ -1,5 +1,6 @@
 import argparse
-import os, errno
+import errno
+import os
 import sys
 
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
@@ -7,17 +8,16 @@ sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 import random as rnd
 import string
 import sys
+from multiprocessing import Pool
 
 from tqdm import tqdm
-from trdg.string_generator import (
-    create_strings_from_dict,
-    create_strings_from_file,
-    create_strings_from_wikipedia,
-    create_strings_randomly,
-)
-from trdg.utils import load_dict, load_fonts
+
 from trdg.data_generator import FakeTextDataGenerator
-from multiprocessing import Pool
+from trdg.string_generator import (create_strings_from_dict,
+                                   create_strings_from_file,
+                                   create_strings_from_wikipedia,
+                                   create_strings_randomly)
+from trdg.utils import load_dict, load_fonts
 
 
 def margins(margin):
@@ -51,7 +51,7 @@ def parse_arguments():
         "--language",
         type=str,
         nargs="?",
-        help="The language to use, should be fr (French), en (English), es (Spanish), de (German), ar (Arabic), cn (Chinese), or hi (Hindi)",
+        help="The language to use, should be fr (French), en (English), es (Spanish), de (German), ar (Arabic), cn (Chinese), ja (Japanese) or hi (Hindi)",
         default="en",
     )
     parser.add_argument(
@@ -212,6 +212,13 @@ def parse_arguments():
         type=int,
         help="Define if the generator will return masks for the text",
         default=0,
+    )
+    parser.add_argument(
+        "-obb",
+        "--output_bboxes",
+        type=int,
+        help="Define if the generator will return bounding boxes for the text, 1: Bounding box file, 2: Tesseract format",
+        default=0
     )
     parser.add_argument(
         "-d",
@@ -453,10 +460,11 @@ def main():
 
     if args.language == "ar":
         from arabic_reshaper import ArabicReshaper
+        from bidi.algorithm import get_display
 
         arabic_reshaper = ArabicReshaper()
         strings = [
-            " ".join([arabic_reshaper.reshape(w) for w in s.split(" ")[::-1]])
+            " ".join([get_display(arabic_reshaper.reshape(w)) for w in s.split(" ")[::-1]])
             for s in strings
         ]
     if args.case == "upper":
@@ -503,6 +511,7 @@ def main():
                 [args.image_mode] * string_count,
                 [args.border_mode] * string_count,
                 [args.border_width] * string_count,
+                [args.output_bboxes] * string_count,
             ),
         ),
         total=args.count,
