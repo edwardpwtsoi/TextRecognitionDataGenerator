@@ -1,5 +1,6 @@
 import argparse
 import errno
+import json
 import os
 import sys
 
@@ -382,6 +383,13 @@ def parse_arguments():
         help="Define the image mode to be used. RGB is default, L means 8-bit grayscale images, 1 means 1-bit binary images stored with one pixel per byte, etc.",
         default="RGB",
     )
+    parser.add_argument(
+        "-ss",
+        "--save_spec",
+        action="store_true",
+        help="Save specification into a text file",
+        default=False,
+    )
     return parser.parse_args()
 
 
@@ -530,6 +538,12 @@ def main():
                 if args.space_width == 0:
                     label = label.replace(" ", "")
                 f.write("{} {}\n".format(file_name, label))
+
+    if args.save_spec:
+        with open(
+            os.path.join(args.output_dir, "spec.json"), "w", encoding="utf8"
+        ) as f:
+            json.dump(vars(args), f, indent=4)
 
 
 if __name__ == "__main__":
