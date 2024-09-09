@@ -13,10 +13,12 @@ from multiprocessing import Pool
 from tqdm import tqdm
 
 from trdg.data_generator import FakeTextDataGenerator
-from trdg.string_generator import (create_strings_from_dict,
-                                   create_strings_from_file,
-                                   create_strings_from_wikipedia,
-                                   create_strings_randomly)
+from trdg.string_generator import (
+    create_strings_from_dict,
+    create_strings_from_file,
+    create_strings_from_wikipedia,
+    create_strings_randomly,
+)
 from trdg.utils import load_dict, load_fonts
 
 
@@ -29,7 +31,7 @@ def margins(margin):
 
 def parse_arguments():
     """
-        Parse the command line arguments of the program.
+    Parse the command line arguments of the program.
     """
 
     parser = argparse.ArgumentParser(
@@ -148,7 +150,7 @@ def parse_arguments():
         "-wk",
         "--use_wikipedia",
         action="store_true",
-        help="Use Wikipedia as the source text for the generation, using this paremeter ignores -r, -n, -s",
+        help="Use Wikipedia as the source text for the generation, using this parameter ignores -r, -n, -s",
         default=False,
     )
     parser.add_argument(
@@ -199,14 +201,14 @@ def parse_arguments():
         "--output_bboxes",
         type=int,
         help="Define if the generator will return bounding boxes for the text, 1: Bounding box file, 2: Tesseract format",
-        default=0
+        default=0,
     )
     parser.add_argument(
         "-d",
         "--distorsion",
         type=int,
         nargs="?",
-        help="Define a distorsion applied to the resulting image. 0: None (Default), 1: Sine wave, 2: Cosine wave, 3: Random",
+        help="Define a distortion applied to the resulting image. 0: None (Default), 1: Sine wave, 2: Cosine wave, 3: Random",
         default=0,
     )
     parser.add_argument(
@@ -214,7 +216,7 @@ def parse_arguments():
         "--distorsion_orientation",
         type=int,
         nargs="?",
-        help="Define the distorsion's orientation. Only used if -d is specified. 0: Vertical (Up and down), 1: Horizontal (Left and Right), 2: Both",
+        help="Define the distortion's orientation. Only used if -d is specified. 0: Vertical (Up and down), 1: Horizontal (Left and Right), 2: Both",
         default=0,
     )
     parser.add_argument(
@@ -318,7 +320,7 @@ def parse_arguments():
     parser.add_argument(
         "-stw",
         "--stroke_width",
-        type=int, 
+        type=int,
         nargs="?",
         help="Define the width of the strokes",
         default=0,
@@ -326,7 +328,7 @@ def parse_arguments():
     parser.add_argument(
         "-stf",
         "--stroke_fill",
-        type=str, 
+        type=str,
         nargs="?",
         help="Define the color of the contour of the strokes, if stroke_width is bigger than 0",
         default="#282828",
@@ -344,7 +346,7 @@ def parse_arguments():
 
 def main():
     """
-        Description: Main function
+    Description: Main function
     """
 
     # Argument parsing
@@ -366,7 +368,9 @@ def main():
         else:
             sys.exit("Cannot open dict")
     else:
-        lang_dict = load_dict(args.language)
+        lang_dict = load_dict(
+            os.path.join(os.path.dirname(__file__), "dicts", args.language + ".txt")
+        )
 
     # Create font (path) list
     if args.font_dir:
@@ -418,7 +422,9 @@ def main():
 
         arabic_reshaper = ArabicReshaper()
         strings = [
-            " ".join([get_display(arabic_reshaper.reshape(w)) for w in s.split(" ")[::-1]])
+            " ".join(
+                [get_display(arabic_reshaper.reshape(w)) for w in s.split(" ")[::-1]]
+            )
             for s in strings
         ]
     if args.case == "upper":
